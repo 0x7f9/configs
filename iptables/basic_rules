@@ -1,0 +1,22 @@
+*filter
+
+# Default policies
+:INPUT DROP [0:0]
+:FORWARD DROP [0:0]
+:OUTPUT ACCEPT [0:0]
+
+# Allow unlimited traffic on the loopback interface
+-A INPUT -i lo -j ACCEPT
+-A OUTPUT -o lo -j ACCEPT
+
+# Allow previously initiated and related connections
+-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Block all ICMP traffic
+-A INPUT -p icmp -j DROP
+-A OUTPUT -p icmp -j DROP
+
+# Drop all other traffic
+-A INPUT -j DROP
+
+COMMIT

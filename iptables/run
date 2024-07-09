@@ -1,0 +1,32 @@
+#!/bin/sh
+exec 2>&1
+
+# System settings
+
+# Ignore ICMP echo requests sent to broadcast addresses to prevent ICMP flood attacks
+echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+
+# Disable acceptance of source-routed packets to prevent spoofing attacks
+echo 0 > /proc/sys/net/ipv4/conf/all/accept_source_route
+
+# Enable TCP SYN cookie protection to prevent SYN flood attacks
+echo 1 > /proc/sys/net/ipv4/tcp_syncookies
+
+# Disable acceptance of ICMP redirect messages to prevent malicious route changes
+echo 0 > /proc/sys/net/ipv4/conf/all/accept_redirects
+
+# Disable sending of ICMP redirect messages to prevent misleading other hosts
+echo 0 > /proc/sys/net/ipv4/conf/all/send_redirects
+
+# Enable source address spoofing protection
+echo 1 > /proc/sys/net/ipv4/conf/all/rp_filter
+
+# Log packets with invalid source addresses to help detect potential issues
+echo 1 > /proc/sys/net/ipv4/conf/all/log_martians
+
+# Restore iptables rules
+[ ! -e /etc/iptables/iptables.rules.save ] && exit 0
+iptables-restore -w 3 /etc/iptables/iptables.rules.save || exit 1
+
+exec chpst -b iptables pause
+

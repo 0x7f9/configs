@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Get the current iptables status
+IPTABLES_STATUS=$(iptables -L)
+
+# Write the iptables status to /etc/issue
+echo "IPTABLES STATUS:" >> /etc/issue
+echo "$IPTABLES_STATUS" >> /etc/issue
+echo "" >> /etc/issue
