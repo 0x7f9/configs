@@ -57,16 +57,25 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-i", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+// static const char *dmenucmd[] = { "dmenu_run", "-i", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+static const char *dmenucmd[] = { "/home/space/.config/suckless/dmenu/script.sh", NULL };
 static const char *termcmd[]  = { "st", NULL };
+
+/* screenshooting using scrot */
 static const char *screenshot[] = { "scrot", "-s", "/home/space/pictures/%Y-%m-%d-%H%M%S.png", NULL };
+
+/* turning up and down brightness */
+static const char *brupcmd[] = { "xbacklight", "-inc", "10%", NULL };
+static const char *brdowncmd[] = { "xbacklight", "-dec", "10%", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_d,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-        { MODKEY,                       XK_Print,  spawn,          {.v = screenshot } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
+    { MODKEY|ShiftMask,             XK_s,      spawn,          {.v = screenshot } },
+	{ 0, 							XF86XK_MonBrightnessUp, spawn, {.v = brupcmd} },
+	{ 0, 							XF86XK_MonBrightnessDown, spawn, {.v = brdowncmd} },
+ 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
