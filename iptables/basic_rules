@@ -3,20 +3,31 @@
 # Default policies
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
-:OUTPUT ACCEPT [0:0]
+:OUTPUT DROP [0:0]
 
 # Allow unlimited traffic on the loopback interface
 -A INPUT -i lo -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
 
-# Allow previously initiated and related connections
--A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+# Allow previously initiated and related connections for incoming traffic
+-A INPUT -m conntrack --ctstate ESTABLISHED, RELATED -j ACCEPT
+
+# Allow outbound DNS
+-A OUTPUT -p udp --dport 53 -j ACCEPT
+
+# Allow outbound NTP
+-A OUTPUT -p udp --dport 123 -j ACCEPT
+
+# Allow outbound HTTP and HTTPS
+-A OUTPUT -p tcp --dport 80 -j ACCEPT
+-A OUTPUT -p tcp --dport 443 -j ACCEPT
 
 # Block all ICMP traffic
 -A INPUT -p icmp -j DROP
 -A OUTPUT -p icmp -j DROP
 
-# Drop all other traffic
+# Cya
 -A INPUT -j DROP
+-A OUTPUT -j DROP
 
 COMMIT
