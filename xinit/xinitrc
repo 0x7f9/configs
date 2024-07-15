@@ -9,10 +9,10 @@ pulseaudio --start &
 # set background images by cating a file to terminal
 # eval `cat ~/.setbg` &
 
-# set display for PC
+# set display for PC Machine
 # xrandr --output DP-0 --primary --left-of HDMI-0 &
 
-# makes HDMI cable to work on laptop on auto
+# Auto HDMI display on laptops
 xrandr --output HDMI1 --auto
 
 # start usb dbus to load devices into the session
