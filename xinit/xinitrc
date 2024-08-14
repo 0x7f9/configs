@@ -10,10 +10,13 @@ pulseaudio --start &
 # eval `cat ~/.setbg` &
 
 # set display for PC Machine
-# xrandr --output DP-0 --primary --left-of HDMI-0 &
+xrandr --output DP-0 --rotate right
+xrandr --output DP-2 --mode 1920x1080 --rate 240 --primary --left-of DP-0
 
 # Auto HDMI display on laptops
-xrandr --output HDMI1 --auto
+# xrandr --output HDMI1 --auto
 
 # start usb dbus to load devices into the session
-exec dbus-run-session dwm
+xhost -
+xhost +SI:localuser:space
+exec dwm
