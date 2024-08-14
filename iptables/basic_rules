@@ -1,6 +1,4 @@
 *filter
-
-# Default policies
 :INPUT DROP [0:0]
 :FORWARD DROP [0:0]
 :OUTPUT DROP [0:0]
@@ -9,8 +7,11 @@
 -A INPUT -i lo -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
 
+# Block TCP xserver
+-A INPUT -p tcp --dport 6000 -j DROP
+
 # Allow previously initiated and related connections for incoming traffic
--A INPUT -m conntrack --ctstate ESTABLISHED, RELATED -j ACCEPT
+-A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 # Allow outbound DNS
 -A OUTPUT -p udp --dport 53 -j ACCEPT
@@ -22,12 +23,10 @@
 -A OUTPUT -p tcp --dport 80 -j ACCEPT
 -A OUTPUT -p tcp --dport 443 -j ACCEPT
 
-# Block all ICMP traffic
--A INPUT -p icmp -j DROP
--A OUTPUT -p icmp -j DROP
+COMMIT
 
-# Cya
--A INPUT -j DROP
--A OUTPUT -j DROP
+*nat
+:POSTROUTING ACCEPT [0:0]
+-A POSTROUTING -o enp4s0  -j MASQUERADE
 
 COMMIT

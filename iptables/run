@@ -1,6 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 exec 2>&1
-
 # Set custom system settings to prevent potential attacks againts the machine
 
 # Disable acceptance of source-routed packets to prevent spoofing attacks
@@ -21,8 +20,8 @@ echo 1 > /proc/sys/net/ipv4/conf/all/rp_filter
 # Log packets with invalid source addresses to help detect potential issues
 echo 1 > /proc/sys/net/ipv4/conf/all/log_martians
 
-# Disable IP forwarding (unless you need to route packets)
-echo 0 > /proc/sys/net/ipv4/ip_forward
+# Enable IP forwarding for NAT
+echo 1 > /proc/sys/net/ipv4/ip_forward
 
 # Disable acceptance of ICMP router advertisements (IPv6)
 echo 0 > /proc/sys/net/ipv6/conf/all/accept_ra
@@ -44,8 +43,6 @@ for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
     echo 1 > $f
 done
 
-[ ! -e /etc/iptables/iptables.rules.save ] && exit 0
-iptables-restore -w 3 /etc/iptables/iptables.rules.save || exit 1
-
+[ ! -e /etc/iptables/iptables.rules ] && exit 0
+iptables-restore -w 3 /etc/iptables/iptables.rules || exit 1
 exec chpst -b iptables pause
-
