@@ -18,5 +18,5 @@ xrandr --output DP-2 --mode 1920x1080 --rate 240 --primary --left-of DP-0
 
 # start usb dbus to load devices into the session
 xhost -
-xhost +SI:localuser:space
+xhost +SI:localuser:USERNAME
 exec dwm
