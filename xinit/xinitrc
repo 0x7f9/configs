@@ -3,7 +3,7 @@
 # start status bar
 slstatus &
 
-# start the audio services 
+# start the audio services
 pulseaudio --start &
 
 # set background images by cating a file to terminal
@@ -16,7 +16,9 @@ xrandr --output DP-2 --mode 1920x1080 --rate 240 --primary --left-of DP-0
 # Auto HDMI display on laptops
 # xrandr --output HDMI1 --auto
 
-# start usb dbus to load devices into the session
+# restrict xhost to the local user only
 xhost -
-xhost +SI:localuser:USERNAME
+xhost +SI:localuser:add username here
+
+# start dwm
 exec dwm
