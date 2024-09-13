@@ -10,21 +10,22 @@
 # Block TCP xserver
 -A INPUT -p tcp --dport 6000 -j DROP
 
-# Allow previously initiated and related connections for incoming traffic
+# Allow previously initiated and related connections for traffic
 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+-A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
-# Allow outbound DNS
+# Allow outbound traffic
 -A OUTPUT -p udp --dport 53 -j ACCEPT
-
-# Allow outbound NTP
 -A OUTPUT -p udp --dport 123 -j ACCEPT
-
-# Allow outbound HTTP and HTTPS
 -A OUTPUT -p tcp --dport 80 -j ACCEPT
 -A OUTPUT -p tcp --dport 443 -j ACCEPT
 
+# Allow inbound for python server on port 80
+-A INPUT -p tcp --dport 80 -j ACCEPT
+
 COMMIT
 
+# Allow all VMS to use firewall rules 
 *nat
 :POSTROUTING ACCEPT [0:0]
 -A POSTROUTING -o enp4s0  -j MASQUERADE
