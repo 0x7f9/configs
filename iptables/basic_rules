@@ -7,6 +7,27 @@
 -A INPUT -i lo -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
 
+# Allow all traffic for the virtual network interface (virbr0)
+-A INPUT -i virbr0 -j ACCEPT
+-A OUTPUT -o virbr0 -j ACCEPT
+
+# Allow all forwarded traffic
+-A FORWARD -i virbr0 -j ACCEPT
+-A FORWARD -o virbr0 -j ACCEPT
+
+# Allow incoming and outgoing traffic on the WireGuard interface
+-A INPUT -i au-bne-wg-301 -j ACCEPT
+-A OUTPUT -o au-bne-wg-301 -j ACCEPT
+
+# Allow outbound UDP for WireGuard
+-A OUTPUT -p udp --dport 51820 -j ACCEPT
+# Allow inbound for WireGuard
+-A INPUT -p udp --dport 51820 -j ACCEPT
+
+# Allow incoming and outgoing traffic specifically on WireGuard listening port (39620)
+-A INPUT -i au-bne-wg-301 -p udp --dport 39620 -j ACCEPT
+-A OUTPUT -o au-bne-wg-301 -p udp --sport 39620 -j ACCEPT
+
 # Block TCP xserver
 -A INPUT -p tcp --dport 6000 -j DROP
 
