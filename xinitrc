@@ -10,7 +10,7 @@ pulseaudio --start &
 # eval `cat ~/.setbg` &
 
 # set display for PC Machine
-xrandr --output DP-0 --rotate right
+# xrandr --output DP-0 --rotate right
 xrandr --output DP-2 --mode 1920x1080 --rate 240 --primary --left-of DP-0
 
 # auto HDMI display on laptops
@@ -18,7 +18,7 @@ xrandr --output DP-2 --mode 1920x1080 --rate 240 --primary --left-of DP-0
 
 # restrict xhost to the local user only
 xhost -
-xhost +SI:localuser:USERNAME HERE
+xhost +SI:localuser:space
 
 # start dwm
 exec dwm
