@@ -3,46 +3,34 @@
 :FORWARD DROP [0:0]
 :OUTPUT DROP [0:0]
 
-# Allow unlimited traffic on the loopback interface
+# Allow loopback interface
 -A INPUT -i lo -j ACCEPT
 -A OUTPUT -o lo -j ACCEPT
 
-# Allow all traffic for the virtual network interface (virbr0)
--A INPUT -i virbr0 -j ACCEPT
--A OUTPUT -o virbr0 -j ACCEPT
-
-# Allow all forwarded traffic
--A FORWARD -i virbr0 -j ACCEPT
--A FORWARD -o virbr0 -j ACCEPT
-
-# Allow incoming and outgoing traffic on the WireGuard interface
--A INPUT -i au-bne-wg-301 -j ACCEPT
--A OUTPUT -o au-bne-wg-301 -j ACCEPT
-
-# Allow outbound UDP for WireGuard
--A OUTPUT -p udp --dport 51820 -j ACCEPT
-# Allow inbound for WireGuard
--A INPUT -p udp --dport 51820 -j ACCEPT
-
-# Allow incoming and outgoing traffic specifically on WireGuard listening port (39620)
--A INPUT -i au-bne-wg-301 -p udp --dport 39620 -j ACCEPT
--A OUTPUT -o au-bne-wg-301 -p udp --sport 39620 -j ACCEPT
-
-# Block TCP xserver
--A INPUT -p tcp --dport 6000 -j DROP
-
 # Allow previously initiated and related connections for traffic
 -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
--A OUTPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
-# Allow outbound traffic
+# Block xserver
+-A INPUT -p tcp --dport 6000 -j DROP
+
+# Restrict inbound traffic for python server to local network 
+-A INPUT -p tcp -s 192.168.0.0/16 --dport 80 -j ACCEPT
+
+# Allow high UDP port range (dynamic port assignments)
+-A INPUT -p udp --dport 40000:65535 -j ACCEPT
+-A OUTPUT -p udp --sport 40000:65535 -j ACCEPT
+
+# Allow all outgoing traffic on the virtual network interface (virbr0)
+-A OUTPUT -o virbr0 -j ACCEPT
+
+# Allow RDP connection 
+# -A OUTPUT -p tcp --dport 3389 -j ACCEPT
+
+# Allow common traffic
 -A OUTPUT -p udp --dport 53 -j ACCEPT
 -A OUTPUT -p udp --dport 123 -j ACCEPT
 -A OUTPUT -p tcp --dport 80 -j ACCEPT
 -A OUTPUT -p tcp --dport 443 -j ACCEPT
-
-# Allow inbound for python server on port 80
--A INPUT -p tcp --dport 80 -j ACCEPT
 
 COMMIT
 
